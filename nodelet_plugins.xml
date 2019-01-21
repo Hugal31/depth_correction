@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<library path="lib/libdepth_correction">
+
+    <class name="depth_correction/depth_correction"
+           type="depth_correction::DepthCorrectionNodelet"
+           base_class_type="nodelet::Nodelet">
+        <description>
+            Nodelet to correct a depth image, subscribe to a 32FC1 "depth" image topic
+            and publish to a "depth_rect" 32FC1 image topic.
+        </description>
+    </class>
+
+</library>

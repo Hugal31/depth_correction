@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="ns" default="depth_correction"/>
+
+    <arg name="manager" default="nodelet_manager"/>
+
+    <arg name="global_und_matrix" default="$(env PWD)/global_matrix.txt"/>
+    <arg name="local_und_matrix" default="$(env PWD)/local_matrix.txt"/>
+
+    <arg name="depth_image"/>
+    <arg name="depth_image_camera_info"/>
+
+    <group ns="$(arg ns)">
+
+        <node pkg="nodelet" type="nodelet" name="$(arg manager)"
+              args="manager"
+              required="true"/>
+
+        <node pkg="nodelet" type="nodelet" name="correct_depth"
+              args="load depth_correction/depth_correction $(arg manager)"
+              required="true">
+            <remap from="image" to="$(arg depth_image)"/>
+
+            <param name="global_und_matrix" value="$(arg global_und_matrix)"/>
+            <param name="local_und_matrix" value="$(arg local_und_matrix)"/>
+        </node>
+
+        <node pkg="nodelet" type="nodelet" name="correct_depth_points"
+              args="load depth_image_proc/point_cloud_xyz $(arg manager)"/>
+
+        <node pkg="topic_tools" type="relay" name="relay_camera_info"
+              args="$(arg depth_image_camera_info) camera_info"
+              required="true"/>
+
+    </group>
+</launch>
